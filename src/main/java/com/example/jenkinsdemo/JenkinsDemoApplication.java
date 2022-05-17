@@ -15,7 +15,7 @@ public class JenkinsDemoApplication {
 
 	@GetMapping(value="/")
 	public String hi() {
-		return "hi";
+		return "trigger jenkins pipeline";
 	}
 	
 }
