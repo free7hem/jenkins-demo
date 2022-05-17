@@ -8,19 +8,17 @@ pipeline {
         }
       }
     }
-    stage('Build') {
+    stage('Build Jar') {
       steps {
         script {
           sh 'mvn clean package -Dmaven.test.skip'
+          sh 'tar czvf app.tar.gz Dockerfile target/*.jar'
         }
       }
     }
     stage('Get JWT Token') {
       steps {
         script {
-          withCredentials([usernamePassword(credentialsId: 'portainer-global', passwordVariable: 'p_passwd', usernameVariable: 'p_user')]) {
-             // some block
-          }
           withCredentials([usernamePassword(credentialsId: 'portainer-global', usernameVariable: 'PORTAINER_USERNAME', passwordVariable: 'PORTAINER_PASSWORD')]) {
               def json = """
                   {"Username": "$PORTAINER_USERNAME", "Password": "$PORTAINER_PASSWORD"}
@@ -33,18 +31,18 @@ pipeline {
         echo "${env.JWTTOKEN}"
       }
     }
-    // stage('Build Docker Image on Portainer') {
-    //   steps {
-    //     script {
-    //       // Build the image
-    //       withCredentials([usernamePassword(credentialsId: 'Github', usernameVariable: 'GITHUB_USERNAME', passwordVariable: 'GITHUB_PASSWORD')]) {
-    //           def repoURL = """
-    //             https://portainer.<yourdomain>.com/api/endpoints/1/docker/build?t=reactApp:latest&remote=https://$GITHUB_USERNAME:$GITHUB_PASSWORD@github.com/$GITHUB_USERNAME/react-bolierplate.git&dockerfile=Dockerfile&nocache=true
-    //           """
-    //           def imageResponse = httpRequest httpMode: 'POST', ignoreSslErrors: true, url: repoURL, validResponseCodes: '200', customHeaders:[[name:"Authorization", value: env.JWTTOKEN ], [name: "cache-control", value: "no-cache"]]
-    //       }
-    //     }
-    //   }
-    // }
+    stage('Build Image') {
+      steps {
+        script {
+          sh '''
+			curl "https://pt.gocheung.com/api/endpoints/26/docker/build?dockerfile=Dockerfile&t=camuscheung%2Fapp" \\
+			  -X "POST" \\
+			  -H "authorization: $JWTTOKEN" \\
+			  -H "content-type: application/x-tar" \\
+			  --data-binary @app.tar.gz
+		  '''
+        }
+      }
+    }
   }
 }
