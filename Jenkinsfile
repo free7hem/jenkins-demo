@@ -44,5 +44,12 @@ pipeline {
         }
       }
     }
+    stage('Deploy') {
+      steps {
+        script {
+          sh 'curl -H "Authorization: Bearer Calong@2015" watchtower:8080/v1/update'
+        }
+      }
+    }
   }
 }
