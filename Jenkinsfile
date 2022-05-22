@@ -35,19 +35,22 @@ pipeline {
       steps {
         script {
           sh '''
-			curl "https://pt.gocheung.com/api/endpoints/26/docker/build?dockerfile=Dockerfile&t=camuscheung%2Fapp" \\
-			  -X "POST" \\
-			  -H "authorization: $JWTTOKEN" \\
-			  -H "content-type: application/x-tar" \\
-			  --data-binary @app.tar.gz
-		  '''
+            curl "https://portainer.hsichin.com/api/endpoints/26/docker/build?dockerfile=Dockerfile&t=camuscheung%2Fapp" \\
+              -X "POST" \\
+              -H "authorization: $JWTTOKEN" \\
+              -H "content-type: application/x-tar" \\
+              --data-binary @app.tar.gz
+		      '''
         }
       }
     }
     stage('Deploy') {
       steps {
         script {
-          sh 'curl -H "Authorization: Bearer Calong@2015" watchtower:8080/v1/update'
+		      withCredentials([string(credentialsId: 'watchtower', variable: 'WATCHTOWER_TOKEN')]) {
+              def token = "Bearer $WATCHTOWER_TOKEN"
+              httpRequest customHeaders: [[name: 'Authorization', value: token]], url: 'http://watchtower:8080/v1/update'
+		      }
         }
       }
     }
