@@ -35,7 +35,7 @@ pipeline {
       steps {
         script {
           sh '''
-            curl "https://pt.gocheung.com/api/endpoints/26/docker/build?dockerfile=Dockerfile&t=camuscheung%2Fapp" \\
+            curl "https://portainer.hsichin.com/api/endpoints/26/docker/build?dockerfile=Dockerfile&t=camuscheung%2Fapp" \\
               -X "POST" \\
               -H "authorization: $JWTTOKEN" \\
               -H "content-type: application/x-tar" \\
