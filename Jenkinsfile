@@ -59,6 +59,7 @@ pipeline {
               def token = "Bearer $WATCHTOWER_TOKEN"
               httpRequest \
                 customHeaders: [[name: 'Authorization', value: token]], \
+                validResponseCodes: '200', \
                 url: 'http://watchtower:8080/v1/update'
 		      }
         }
