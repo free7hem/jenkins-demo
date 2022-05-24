@@ -15,7 +15,7 @@ public class JenkinsDemoApplication {
 
 	@GetMapping(value="/")
 	public String hi() {
-		return "demo V0.9";
+		return "demo V1.0.1";
 	}
 	
 }

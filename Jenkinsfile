@@ -16,6 +16,7 @@ pipeline {
       steps {
         sh 'mvn clean package -Dmaven.test.skip'
         sh 'tar czvf app.tar.gz Dockerfile target/*.jar'
+        stash includes: 'app.tar.gz', name: 'app' 
       }
     }
     stage('Build Image') {
@@ -38,6 +39,7 @@ pipeline {
             env.JWTTOKEN = "Bearer ${jwtObject.jwt}"
           }
         }
+        unstash 'app'
         sh '''
           curl "https://portainer.hsichin.com/api/endpoints/26/docker/build?dockerfile=Dockerfile&t=camuscheung%2Fapp" \\
             -X "POST" \\
