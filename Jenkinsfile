@@ -10,7 +10,7 @@ pipeline {
       agent {
         docker { 
           image 'maven:3.8.1-adoptopenjdk-11'
-          args '-v $HOME/.m2:/root/.m2'
+          args '-v $HOME/.m2:/root/.m2 -l traefik.enable=false'
         }
       }
       steps {
@@ -60,6 +60,11 @@ pipeline {
             url: 'http://watchtower:8080/v1/update'
           }
         }
+      }
+    }
+    post {
+      success {
+        sh 'docker image prune'
       }
     }
   }
