@@ -63,14 +63,14 @@ pipeline {
       }
     }
   }
-  post {
-    success {
-      echo 'Remove dangling images'
-      sh 'docker image prune -f'
-    }
-    always {
-      echo 'Clean up workspace'
-      deleteDir()
-    }
-  }
+  // post {
+  //   success {
+  //     echo 'Remove dangling images'
+  //     sh 'docker image prune -f'
+  //   }
+  //   always {
+  //     echo 'Clean up workspace'
+  //     deleteDir()
+  //   }
+  // }
 }
