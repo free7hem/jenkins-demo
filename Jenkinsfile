@@ -6,14 +6,15 @@ pipeline {
         docker { 
           image 'maven:3.8.1-adoptopenjdk-11'
           args '-v $HOME/.m2:/root/.m2 -l traefik.enable=false'
+          // args '-u 0:0 -v maven_m2:/root/.m2 -l traefik.enable=false'
         }
       }
       steps {
         sh 'mvn clean package -Dmaven.test.skip'
         sh 'tar czvf app.tar.gz Dockerfile target/*.jar'
         stash includes: 'app.tar.gz', name: 'app'
-        // Clean agent ws
-        cleanWs()
+        // sh 'mvn clean'
+        // cleanWs()
       }
     }
     stage('Build image') {
