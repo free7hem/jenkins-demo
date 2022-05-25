@@ -1,11 +1,6 @@
 pipeline {
   agent any
   stages {
-    stage('Prepare') {
-      steps {
-        cleanWs()
-      }
-    }
     stage('Build jar') {
       agent {
         docker { 
@@ -16,7 +11,9 @@ pipeline {
       steps {
         sh 'mvn clean package -Dmaven.test.skip'
         sh 'tar czvf app.tar.gz Dockerfile target/*.jar'
-        stash includes: 'app.tar.gz', name: 'app' 
+        stash includes: 'app.tar.gz', name: 'app'
+        // Clean agent ws
+        cleanWs()
       }
     }
     stage('Build image') {
@@ -63,14 +60,14 @@ pipeline {
       }
     }
   }
-  // post {
-  //   success {
-  //     echo 'Remove dangling images'
-  //     sh 'docker image prune -f'
-  //   }
-  //   always {
-  //     echo 'Clean up workspace'
-  //     deleteDir()
-  //   }
-  // }
+  post {
+    success {
+      // Remove dangling images
+      sh 'docker image prune -f'
+    }
+    always {
+      // Clean up workspace
+      cleanWs()
+    }
+  }
 }
