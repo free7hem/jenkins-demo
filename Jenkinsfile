@@ -19,7 +19,7 @@ pipeline {
         stash includes: 'app.tar.gz', name: 'app' 
       }
     }
-    stage('Build Image') {
+    stage('Build image') {
       steps {
         script {
           withCredentials([usernamePassword(credentialsId: 'portainer-global', usernameVariable: 'PORTAINER_USERNAME', passwordVariable: 'PORTAINER_PASSWORD')]) {
@@ -49,7 +49,7 @@ pipeline {
         '''
       }
     }
-    stage('Nofity Watchtower') {
+    stage('Nofity watchtower') {
       steps {
         script {
           withCredentials([string(credentialsId: 'watchtower', variable: 'WATCHTOWER_TOKEN')]) {
@@ -62,10 +62,15 @@ pipeline {
         }
       }
     }
-    post {
-      success {
-        sh 'docker image prune'
-      }
+  }
+  post {
+    success {
+      echo 'Remove dangling images'
+      sh 'docker image prune'
+    }
+    always {
+      echo 'Clean up workspace'
+      deleteDir()
     }
   }
 }
