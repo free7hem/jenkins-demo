@@ -2,6 +2,7 @@ pipeline {
   agent any
   environment {
     PORTAINER_HOST = 'https://portainer.hsichin.com'
+    PORTAINER_ENDPOINT = 26
   }
   stages {
     stage('Build jar') {
@@ -40,7 +41,7 @@ pipeline {
         }
         unstash 'app'
         sh '''
-          curl "${PORTAINER_HOST}/api/endpoints/2/docker/build?dockerfile=Dockerfile&t=camuscheung%2Fapp" \\
+        //curl "${PORTAINER_HOST}/api/endpoints/${PORTAINER_ENDPOINT}/docker/build?dockerfile=Dockerfile&t=camuscheung%2Fapp" \\
             -X "POST" \\
             -H "authorization: $JWTTOKEN" \\
             -H "content-type: application/x-tar" \\
