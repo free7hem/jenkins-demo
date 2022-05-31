@@ -41,7 +41,7 @@ pipeline {
         }
         unstash 'app'
         sh '''
-        //curl "${PORTAINER_HOST}/api/endpoints/${PORTAINER_ENDPOINT}/docker/build?dockerfile=Dockerfile&t=camuscheung%2Fapp" \\
+          curl "${PORTAINER_HOST}/api/endpoints/${PORTAINER_ENDPOINT}/docker/build?dockerfile=Dockerfile&t=camuscheung%2Fapp" \\
             -X "POST" \\
             -H "authorization: $JWTTOKEN" \\
             -H "content-type: application/x-tar" \\
