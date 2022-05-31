@@ -1,5 +1,8 @@
 pipeline {
   agent any
+  environment {
+    PORTAINER_HOST = 'https://portainer.hsichin.com'
+  }
   stages {
     stage('Build jar') {
       agent {
@@ -30,14 +33,14 @@ pipeline {
               ignoreSslErrors: true, \
               consoleLogResponseBody: true, \
               requestBody: json, \
-              url: "https://portainer.hsichin.com/api/auth"
+              url: "${PORTAINER_HOST}/api/auth"
             def jwtObject = new groovy.json.JsonSlurper().parseText(jwtResponse.getContent())
             env.JWTTOKEN = "Bearer ${jwtObject.jwt}"
           }
         }
         unstash 'app'
         sh '''
-          curl "https://portainer.hsichin.com/api/endpoints/26/docker/build?dockerfile=Dockerfile&t=camuscheung%2Fapp" \\
+          curl "${PORTAINER_HOST}/api/endpoints/2/docker/build?dockerfile=Dockerfile&t=camuscheung%2Fapp" \\
             -X "POST" \\
             -H "authorization: $JWTTOKEN" \\
             -H "content-type: application/x-tar" \\
