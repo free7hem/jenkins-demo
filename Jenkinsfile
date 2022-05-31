@@ -18,7 +18,7 @@ pipeline {
     stage('Build image') {
       steps {
         script {
-          withCredentials([usernamePassword(credentialsId: 'portainer-global', usernameVariable: 'PORTAINER_USERNAME', passwordVariable: 'PORTAINER_PASSWORD')]) {
+          withCredentials([usernamePassword(credentialsId: 'portainer', usernameVariable: 'PORTAINER_USERNAME', passwordVariable: 'PORTAINER_PASSWORD')]) {
             def json = """
               {"Username": "$PORTAINER_USERNAME", "Password": "$PORTAINER_PASSWORD"}
             """
