@@ -66,9 +66,7 @@ pipeline {
   post {
     success {
       // Remove dangling images
-      sh 'docker image prune -f'
-    }
-    always {
+      // sh 'docker image prune -f'
       // Clean up workspace
       cleanWs()
     }
